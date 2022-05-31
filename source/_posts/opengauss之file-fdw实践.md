@@ -72,7 +72,7 @@ explain select * from person;
 ```
 
 
-![在这里插入图片描述](img.singhe.art/0dad6640addc46b2890ad7541ad407ae.png)
+![](http://img.singhe.art/0dad6640addc46b2890ad7541ad407ae.png)
 
 
 
@@ -80,7 +80,7 @@ explain select * from person;
 select * from person;
 ```
 
-![](img.singhe.art/select.png)
+![](http://img.singhe.art/select.png)
 
 ## 表删除
 
