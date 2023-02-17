@@ -1,5 +1,5 @@
 ---
-title: std::mutex
+title: SLOG
 date: 2022-05-31 18:41:25
 tags:
 categories:
@@ -150,7 +150,7 @@ client发送的transaction是发给最近的region，但是此region可能不是
 
 导致slog吞吐率比calvin低最主要的原因是multi-home事务的存在，在calvin中没有multi-home的概念，因此calvin不受multi-home的影响。
 
-而slog对multi-home类型的事务需要额外的附加LockOnlyTxn，这导致了计算的开销，同时LockOnlyTxn与single-home会有锁的等待，也影响了吞吐率。
+xxxxxxxxxx /*client_tcp.c*/#include<stdio.h>#include<string.h>#include<stdlib.h>#include<unistd.h>#include<arpa/inet.h>#include<sys/socket.h>​int main(){    //创建套接字    int sock = socket(AF_INET, SOCK_STREAM, 0);​    //服务器的ip为本地，端口号1234    struct sockaddr_in serv_addr;    memset(&serv_addr, 0, sizeof(serv_addr));    serv_addr.sin_family = AF_INET;    inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr);    serv_addr.sin_port = htons(1234);        //向服务器发送连接请求    connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));    //发送并接收数据    char buffer[40];    printf("Please write:");    scanf("%s", buffer);    write(sock, buffer, sizeof(buffer));​    memset(buffer, 0, sizeof(buffer));    read(sock, buffer, sizeof(buffer) - 1);    printf("Serve send: %s\n", buffer);​    //断开连接    close(sock);​    return 0;}c
 
 但是当multi-partition（跨分片）事务数量变多的时候，calvin和slog的吞吐率差距会变小，因为calvin对于跨分片的事务也需要进行协调带来额外的开销，而slog在处理multi-home的时候顺带也解决了（部分）multi-partition的冲突。
 
