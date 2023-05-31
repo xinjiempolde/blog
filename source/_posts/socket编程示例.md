@@ -236,3 +236,153 @@ int main(){
 	return 0;
 }
 ```
+
+
+
+# Java socket代码
+
+## client
+
+```java
+import java.io.*;
+import java.net.Inet4Address;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+public class Client {
+    //java基础类方法的入口
+    public static void main(String[] args)throws IOException {
+        Socket socket=new Socket();
+        //读取流超时的时间设置为3000
+        socket.setSoTimeout(3000);
+        //连接本地，端口2000；超时时间3000ms
+        // Inet4Address.getByName("39.98.27.6")
+        socket.connect(new InetSocketAddress(Inet4Address.getLocalHost(), 2000),3000);
+        System.out.println("发起服务器连接---------");
+        System.out.println("客户端信息："+socket.getLocalAddress()+" P:"+socket.getLocalPort());//打印本地服务器地址和本地端口号
+        System.out.println("服务端信息："+socket.getInetAddress()+" P:"+socket.getPort());
+        try{
+            //发送接收数据
+            todo(socket);
+        }catch (Exception e){
+            System.out.println("出现异常关闭啦");
+        }
+        //释放资源
+        socket.close();
+        System.out.println("再见，客户端已退出");
+    }
+    //发送数据的方法
+    private  static void todo(Socket client) throws IOException{
+        //构建键盘输入流
+        InputStream in=System.in;
+        //把键盘输入流转换为BufferedReader
+        BufferedReader input=new BufferedReader(new InputStreamReader(in,"UTF-8"));
+        //得到Socket输出流（Client要发送出去给服务器的信息），并转换为打印流
+        OutputStream outputStream = client.getOutputStream();
+        PrintStream socketPrintStream=new PrintStream(outputStream);
+        //得到Socket输入流（Server回复传入Client的信息）,并转换为BufferedReader
+        InputStream inputStream = client.getInputStream();
+        BufferedReader socketBufferedReader=new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+        //判断Server是否想要退出，回复“bye”时是他想要结束对话
+        boolean flag=true;
+        do {
+            //键盘读取一行
+            String str = input.readLine();
+            //发送到服务器，（通俗就是显示在输入处，在键盘上输入什么，屏幕显示什么）
+            //String str = "003099999920220614100000M1S1C0x0a";
+            socketPrintStream.println(str);
+            //从服务器读取一行，即Server传入回复给Client的信息
+            String echo = socketBufferedReader.readLine();
+            if("bye".equalsIgnoreCase(echo)){
+                flag=false;
+            } else{
+                //打印到屏幕上，Server回复什么就显示什么
+                System.out.println("客户端回复："+echo);
+            }
+        }while(flag);
+        //资源释放，关闭对于socket资源
+        socketPrintStream.close();
+        socketBufferedReader.close();
+    }
+}
+```
+
+
+
+## server
+
+```java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+public class Server {
+    public static void main(String[] args)throws IOException {
+        ServerSocket server=new ServerSocket(2000);
+        System.out.println("服务器准备就绪----------");
+        System.out.println("服务器信息："+server.getInetAddress()+" P:"+server.getLocalPort());
+        //等待多个客户端连接，循环异步线程
+        for(;;) {
+            //得到客户端
+            Socket client = server.accept();
+            //客户端构建异步线程
+            ClientHandler clientHandler = new ClientHandler(client);
+            //启动线程
+            clientHandler.start();
+        }
+    }
+    /**
+     * 客户端消息处理
+     */
+    //多个客户端需要做异步操作，建立异步处理类
+    private static class ClientHandler extends Thread{//线程
+        private  Socket socket;//代表当前的一个连接
+        private boolean flag=true;
+        ClientHandler(Socket socket){
+            this.socket=socket;
+        }//构造方法
+        //一旦Thead启动起来，就会运行run方法，代表线程启动的部分
+        @Override
+        public void run(){
+            super.run();
+            //打印客户端的信息
+            System.out.println("新客户端发起连接："+socket.getInetAddress()+" P:"+socket.getPort());
+            //在发送过程中会触发一个IO过程，所以需要捕获异常
+            try {
+                //得到打印流，用于数据输出，服务器回送数据使用，即在屏幕上显示Server要回复Client的信息
+                PrintStream socketOutput=new PrintStream(socket.getOutputStream());
+                //得到输入流，用于接收数据，得到Client回复服务器的信息
+                BufferedReader sockeInput=new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8"));
+                do {
+                    //客户端回复一条数据
+                    String str = sockeInput.readLine();
+                    if("bye".equalsIgnoreCase(str)){
+                        flag=false;
+                        //回送
+                        socketOutput.println("bye");
+                    }else{
+                        //打印到屏幕，并回送数据长度
+                        System.out.println(str);
+                        socketOutput.println("Server回答说：" +str.length());
+                    }
+                }while(flag);
+                sockeInput.close();
+                socketOutput.close();
+            }catch (Exception e){
+                //触发异常时打印一个异常信息
+                System.out.println("连接异常断开！！！");
+            }finally {
+                //连接关闭
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("再见，客户端退出："+socket.getInetAddress()+" P:"+socket.getPort());
+        }
+    }
+}
+```
+

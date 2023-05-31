@@ -1,3 +1,13 @@
+---
+title: glog
+date: 2023-05-31 11:54:23
+tags:
+    - linux
+categories:
+    - linux
+
+---
+
 # glog
 
 glog是谷歌开源的C++日志库，这里对glog进行一个简单的学习记录。

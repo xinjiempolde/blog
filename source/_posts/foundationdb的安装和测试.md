@@ -30,7 +30,7 @@ sudo dpkg --purge foundationdb-clients
 
 ```
 
-
+<!--more-->
 
 查看服务状态
 
