@@ -4,7 +4,7 @@ glog是谷歌开源的C++日志库，这里对glog进行一个简单的学习记
 
 
 
-<!--more-->
+<!--more-->c
 
 # 在CMake中添加glog
 
