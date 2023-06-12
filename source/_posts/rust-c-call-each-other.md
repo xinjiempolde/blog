@@ -118,3 +118,68 @@ unsafe的作用：rust只能保证自己的代码是安全的，c语言的代码
 ## 整体代码结构
 
 ![http://img.singhe.art/20230611185938.png](http://img.singhe.art/20230611185938.png)
+
+
+
+# Rust使用已存在的C语言库
+
+> 参考[https://stackoverflow.com/questions/43826572/where-should-i-place-a-static-library-so-i-can-link-it-with-a-rust-program](https://stackoverflow.com/questions/43826572/where-should-i-place-a-static-library-so-i-can-link-it-with-a-rust-program)
+
+## 编译出静态连接库
+
+假设在目录`/home/singheart/Project/cpp_project`下有一个`square.c`的文件，文件内容如下:
+
+```c
+int square(int value) {
+    return value * value;
+}
+```
+
+ 将其编译成`libsquare.a`放在同一个目录下：
+
+```shell
+gcc -c -o square.o square.c
+ar -rcs libsquare.a square.o
+```
+
+## 创建build.rs
+
+```rust
+fn main() {
+  println!("cargo:rustc-link-search=/home/singheart/Project/cpp_project");
+}
+```
+
+## 创建main.rs
+
+```rust
+#[link(name = "square")]
+extern "C" {
+    fn square(val: i32) -> i32;
+}
+
+fn main() {
+    let r = unsafe { square(3) };
+    println!("3 squared is {}", r);
+}
+
+```
+
+## 编写Cargo.toml
+
+```toml
+[package]
+name = "rust-use-c-lib"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+libc = "0.2"
+
+[build-dependencies]
+cc = "1.0"
+```
+
