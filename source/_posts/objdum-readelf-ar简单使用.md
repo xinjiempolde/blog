@@ -385,6 +385,33 @@ singheart@FX504GE:~/Project/assembly$ nm SimpleSection.o
 
 
 
+## readelf -l
+
+查看可执行文件的Segment header
+
+```shell
+singheart@FX504GE:~/Project/assembly$ readelf -l hello
+
+Elf 文件类型为 EXEC (可执行文件)
+Entry point 0x4000b0
+There are 2 program headers, starting at offset 64
+
+程序头：
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  LOAD           0x0000000000000000 0x0000000000400000 0x0000000000400000
+                 0x00000000000000d2 0x00000000000000d2  R E    0x200000
+  LOAD           0x00000000000000d2 0x00000000006000d2 0x00000000006000d2
+                 0x000000000000000e 0x000000000000000e  RW     0x200000
+
+ Section to Segment mapping:
+  段节...
+   00     .text 
+   01     .data
+```
+
+
+
 # c++filt
 
 能够解析C++修饰过的符号名称
@@ -436,5 +463,116 @@ loadlocale.o
 loadarchive.o
 localeconv.o
 ...
+```
+
+
+
+# 使用C语言解析ELF
+
+```c
+#include <fcntl.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <iostream>
+#include <elf.h>
+
+int fd;
+void ParseELFHeader(const Elf64_Ehdr &elf_header);
+void ParseSectionHeader(const Elf64_Ehdr &elf_header, Elf64_Shdr *section_header);
+
+void ParseELF(const char * filepath) {
+  fd = open(filepath, O_RDONLY);
+  if (fd < 0) {
+    std::cerr << "Error opening file " << filepath << "\n";
+    exit(1);
+  }
+  Elf64_Ehdr elf_header;
+  int read_elf_header_size = read(fd, &elf_header, sizeof(Elf64_Ehdr));
+  if (read_elf_header_size < sizeof(Elf64_Ehdr)) {
+    std::cerr << "ELF file is not complete\n";
+    exit(1);
+  }
+  ParseELFHeader(elf_header);
+  
+  // 解析Section header table
+  Elf64_Shdr *section_header = new Elf64_Shdr[elf_header.e_shnum];
+  lseek(fd, elf_header.e_shoff, SEEK_SET);
+  read(fd, section_header, sizeof(Elf64_Shdr) * elf_header.e_shnum);
+  ParseSectionHeader(elf_header, section_header);
+  delete[] section_header;
+}
+
+void ParseELFHeader(const Elf64_Ehdr &elf_header) {
+  printf("ELF文件头格式如下：\n");
+  printf("Magic(e_ident):");
+  for (int i = 0; i < EI_NIDENT; i++) {
+    printf("%.2x ", elf_header.e_ident[i]);
+  }
+  printf("\n");
+  // TODO: 按照Elf64_Ehdr的格式分析完
+  // ...
+  printf("Section header table的文件内偏移地址：0x%lx\n", elf_header.e_shoff);
+  printf("一共有多少个段：%d\n", elf_header.e_shnum);
+  printf("Section header string table的下标: %d\n", elf_header.e_shstrndx);
+}
+
+void ParseSectionHeader(const Elf64_Ehdr &elf_header, Elf64_Shdr *section_header) {
+  printf("%x", section_header[1].sh_name);
+  // 先解析Section header string table
+  Elf64_Shdr *shstrtab_header = &section_header[elf_header.e_shstrndx];
+  printf("shstrtab的文件内偏移地址：0x%lx\n", shstrtab_header->sh_offset);
+  printf("shstrtab段的总字节大小：%ld\n", shstrtab_header->sh_size);
+  char *shstrtab = new char[shstrtab_header->sh_size];
+  lseek(fd, shstrtab_header->sh_offset, SEEK_SET);
+  read(fd, shstrtab, shstrtab_header->sh_size);
+  
+  // 解析其他段的内容，把段名打印出来
+  printf("所有的段段名如下：\n");
+  int symtable_idx = 0;
+  int strtab_idx = 0;
+  int text_idx = 0;
+  for (int i = 0; i < elf_header.e_shnum; i++) {
+    printf("%s\n", shstrtab + section_header[i].sh_name);
+    if (strcmp(".symtab", shstrtab + section_header[i].sh_name) == 0) {
+      symtable_idx = i;
+    } else if (strcmp(".strtab", shstrtab + section_header[i].sh_name) == 0) {
+      strtab_idx = i;
+    } else if (strcmp(".text", shstrtab + section_header[i].sh_name) == 0) {
+      text_idx = i;
+    }
+  }
+  printf("符号表的数组下标：%d\n", symtable_idx);
+  printf("字符串表的数组下标：%d\n", strtab_idx);
+
+  // text属性
+  printf("VMA: %lx\n", section_header[text_idx].sh_addr);
+
+  // 解析字符串表的内容
+  char *strtab = new char[section_header[strtab_idx].sh_size];
+  lseek(fd, section_header[strtab_idx].sh_offset, SEEK_SET);
+  read(fd, strtab, section_header[strtab_idx].sh_size);
+
+  // 解析符号表的内容
+  printf(".symtab的文件内偏移地址：0x%lx\n", section_header[symtable_idx].sh_offset);
+  printf(".symtab的段大小：%ld\n", section_header[symtable_idx].sh_size);
+  Elf64_Sym *symtab = reinterpret_cast<Elf64_Sym *>(new char[section_header[symtable_idx].sh_size]);
+  lseek(fd, section_header[symtable_idx].sh_offset, SEEK_SET);
+  read(fd, symtab, section_header[symtable_idx].sh_size);
+  int sym_num = section_header[symtable_idx].sh_size / sizeof(Elf64_Sym);
+  // 打印所有的符号
+  for (int i = 0; i < sym_num; i++) {
+    printf("%s\n", strtab + symtab[i].st_name);
+  }
+
+  delete []strtab;
+  delete []shstrtab;
+  delete []symtab;
+  
+}
+int main() {
+  ParseELF("../ab");
+  return 0;
+}
 ```
 
