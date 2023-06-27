@@ -412,6 +412,62 @@ There are 2 program headers, starting at offset 64
 
 
 
+## readelf -d
+
+查看".dynamic"段的内容：
+
+```shell
+singheart@FX504GE:~/Project/assembly$ readelf -d Lib.so 
+
+Dynamic section at offset 0xe20 contains 24 entries:
+  标记        类型                         名称/值
+ 0x0000000000000001 (NEEDED)             共享库：[libc.so.6]
+ 0x000000000000000c (INIT)               0x520
+ 0x000000000000000d (FINI)               0x66c
+ 0x0000000000000019 (INIT_ARRAY)         0x200e10
+ 0x000000000000001b (INIT_ARRAYSZ)       8 (bytes)
+ 0x000000000000001a (FINI_ARRAY)         0x200e18
+ 0x000000000000001c (FINI_ARRAYSZ)       8 (bytes)
+ 0x000000006ffffef5 (GNU_HASH)           0x1f0
+ 0x0000000000000005 (STRTAB)             0x368
+ 0x0000000000000006 (SYMTAB)             0x230
+ 0x000000000000000a (STRSZ)              163 (bytes)
+ 0x000000000000000b (SYMENT)             24 (bytes)
+ 0x0000000000000003 (PLTGOT)             0x201000
+ 0x0000000000000002 (PLTRELSZ)           48 (bytes)
+ 0x0000000000000014 (PLTREL)             RELA
+ 0x0000000000000017 (JMPREL)             0x4f0
+ 0x0000000000000007 (RELA)               0x448
+ 0x0000000000000008 (RELASZ)             168 (bytes)
+ 0x0000000000000009 (RELAENT)            24 (bytes)
+ 0x000000006ffffffe (VERNEED)            0x428
+ 0x000000006fffffff (VERNEEDNUM)         1
+ 0x000000006ffffff0 (VERSYM)             0x40c
+ 0x000000006ffffff9 (RELACOUNT)          3
+ 0x0000000000000000 (NULL)               0x0
+```
+
+
+
+## readelf -sD
+
+查看动态符号表的内容和哈希表的内容
+
+```shell
+singheart@FX504GE:~/Project/assembly$ readelf -sD Lib.so 
+
+Symbol table of `.gnu.hash' for image:
+  Num Buc:    Value          Size   Type   Bind Vis      Ndx Name
+    7   0: 0000000000201030     0 NOTYPE  GLOBAL DEFAULT  22 _edata
+    8   0: 0000000000201038     0 NOTYPE  GLOBAL DEFAULT  23 _end
+    9   1: 0000000000201030     0 NOTYPE  GLOBAL DEFAULT  23 __bss_start
+   10   1: 0000000000000520     0 FUNC    GLOBAL DEFAULT   9 _init
+   11   2: 000000000000066c     0 FUNC    GLOBAL DEFAULT  13 _fini
+   12   2: 0000000000000635    54 FUNC    GLOBAL DEFAULT  12 foobar
+```
+
+
+
 # c++filt
 
 能够解析C++修饰过的符号名称
@@ -463,6 +519,20 @@ loadlocale.o
 loadarchive.o
 localeconv.o
 ...
+```
+
+
+
+# ldd
+
+ldd可以查看程序主模块或者一个共享库依赖于哪些共享库
+
+```shell
+singheart@FX504GE:~/Project/assembly$ ldd Program1
+	linux-vdso.so.1 (0x00007ffdc75d1000)
+	./Lib.so (0x00007f60a19ab000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f60a15ba000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f60a1daf000)
 ```
 
 
