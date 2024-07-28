@@ -2,9 +2,9 @@
 title: C++重载运算符>>和<<
 date: 2022-04-04 20:46:11
 tags:
-    - C++
+    - cpp
 categories:
-    - C++
+    - cpp
 ---
 
 # 概述

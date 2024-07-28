@@ -3,7 +3,7 @@ title: multi-clock snapshot isolation
 date: 2023-06-07 11:07:01
 tags:
 categories:
-    - paper
+    - database
 ---
 
 # 

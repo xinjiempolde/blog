@@ -2,9 +2,9 @@
 title: std::mutex
 date: 2022-05-31 18:41:25
 tags:
-    - C++
+    - cpp
 categories:
-    - C++
+    - cpp
 ---
 
 > 本文转载自[CSDN](https://blog.csdn.net/weixin_42570248/article/details/100849100)

@@ -5,7 +5,7 @@ tags:
     - zmq
     - protobuf
 categories:
-    - tutorial
+    - cpp
 ---
 
 # zmq + protobuf安装教程

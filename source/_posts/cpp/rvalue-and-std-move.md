@@ -2,9 +2,9 @@
 title: rvalue_and_std::move
 date: 2022-08-03 21:05:20
 tags:
-    - C++
+    - cpp
 categories:
-    - C++
+    - cpp
 ---
 
 > 参考文章[https://www.cprogramming.com/c++11/rvalue-references-and-move-semantics-in-c++11.html](https://www.cprogramming.com/c++11/rvalue-references-and-move-semantics-in-c++11.html)

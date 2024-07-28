@@ -2,10 +2,10 @@
 title: condition-variable
 date: 2022-08-13 23:24:25
 tags:
-    - C++
+    - cpp
     - thread
 categories:
-    - C++
+    - cpp
 ---
 
 > 前面已经对mutex以及相关的lock进行了梳理，这里对thread和condition_variable做一个简单的梳理。

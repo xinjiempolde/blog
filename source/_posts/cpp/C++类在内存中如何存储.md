@@ -2,9 +2,9 @@
 title: C++类在内存中如何存储
 date: 2022-08-03 14:09:29
 tags:
-    - C++
+    - cpp
 categories:
-    - C++
+    - cpp
 ---
 
 > 参考[https://baijiahao.baidu.com/s?id=1653384309305389312&wfr=spider&for=pc](https://baijiahao.baidu.com/s?id=1653384309305389312&wfr=spider&for=pc)

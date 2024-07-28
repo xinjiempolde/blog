@@ -5,7 +5,7 @@ tags:
     - go语言
     - 编程
 categories:
-    - GO
+    - go
 ---
 
 > 本文参考[CSDN博客](https://blog.csdn.net/deroy/article/details/123021040)

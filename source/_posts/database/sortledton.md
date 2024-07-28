@@ -5,7 +5,7 @@ tags:
     - data_structure
     - graph
 categories:
-    - paper
+    - database
 
 ---
 

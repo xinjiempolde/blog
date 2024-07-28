@@ -5,7 +5,7 @@ tags:
     - 计算机网络
     - telnet
 categories:
-    - 计算机网络
+    - linux
 ---
 
 > 前言：使用telnet模拟HTTP请求访问页面，及其使用telnet发送邮件

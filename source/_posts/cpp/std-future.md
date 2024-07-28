@@ -2,9 +2,9 @@
 title: std::future
 date: 2023-02-22 11:33:46
 tags:
-    - C++
+    - cpp
 categories:
-    - coding
+    - cpp
 ---
 
 参考：[https://blog.csdn.net/lizhichao410/article/details/123732787](https://blog.csdn.net/lizhichao410/article/details/123732787)

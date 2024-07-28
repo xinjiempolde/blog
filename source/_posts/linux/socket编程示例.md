@@ -5,7 +5,7 @@ tags:
     - 计算机网络
     - socket
 categories:
-    - 计算机网络
+    - linux
 ---
 
 > 本次使用的环境为Ubuntu 16.04。如果是linux操作系统能够运行本示例代码，如果是Windows操作系统，那么本篇文章不适用。

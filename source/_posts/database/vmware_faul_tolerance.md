@@ -5,7 +5,7 @@ tags:
     - fault_tolerance
     - MIT6.824
 categories:
-    - paper
+    - database
 
 ---
 

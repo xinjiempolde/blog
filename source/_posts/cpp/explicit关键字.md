@@ -2,9 +2,9 @@
 title: explicit关键字
 date: 2022-05-31 11:33:07
 tags:
-    - C++
+    - cpp
 categories:
-    - C++
+    - cpp
 ---
 
 > 本文参考自[知乎](https://zhuanlan.zhihu.com/p/137947734)

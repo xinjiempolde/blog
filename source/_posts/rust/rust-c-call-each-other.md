@@ -4,7 +4,7 @@ date: 2023-06-11 17:56:21
 tags:
     - rust
 categories:
-    - coding
+    - linux
 ---
 
 # Rust调用C语言代码

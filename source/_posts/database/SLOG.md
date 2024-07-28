@@ -3,7 +3,7 @@ title: SLOG
 date: 2022-05-31 18:41:25
 tags:
 categories:
-    - paper
+    - database
 ---
 
 # 背景

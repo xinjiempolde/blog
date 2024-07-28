@@ -4,7 +4,7 @@ date: 2023-02-10 12:23:25
 tags:
     - shell
 categories:
-    - coding
+    - linux
 
 ---
 

@@ -2,10 +2,10 @@
 title: std::list详解
 date: 2022-05-31 16:31:23
 tags:
-    - C++
+    - cpp
     - STL
 categories:
-    - C++
+    - cpp
 ---
 
 > 本文转载自[CSDN超级大洋葱806](https://blog.csdn.net/u014779536/article/details/111301635)

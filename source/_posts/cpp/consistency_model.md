@@ -4,7 +4,7 @@ date: 2022-09-15 10:44:52
 tags:
     - memory_model
 categories:
-    - others
+    - linux
 ---
 
 # memory consistency model

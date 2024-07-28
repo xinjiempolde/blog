@@ -5,7 +5,7 @@ tags:
     - encode
     - coding
 categories:
-    - coding
+    - data_structure
 
 ---
 

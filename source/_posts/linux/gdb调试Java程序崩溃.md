@@ -2,7 +2,7 @@
 title: gdb调试Java程序崩溃
 date: 2024-06-21 16:25:09
 tags:
-  - coding
+  - linux
 ---
 
 > 参考[在Linux生成core dump文件](https://senlinzhan.github.io/2017/12/31/coredump/)

@@ -4,7 +4,7 @@ date: 2022-05-31 18:41:25
 tags:
     - MineCraft
 categories:
-    - others
+    - linux
 
 ---
 

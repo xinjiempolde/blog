@@ -4,7 +4,7 @@ date: 2023-02-17 11:01:03
 tags:
     - linux
 categories:
-    - others
+    - linux
 ---
 
 # 前言

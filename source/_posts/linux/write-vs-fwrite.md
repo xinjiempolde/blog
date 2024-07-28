@@ -2,9 +2,9 @@
 title: write_vs_fwrite
 date: 2023-12-20 16:09:57
 tags:
-    - C++
+    - linux
 categories:
-    - C++
+    - linux
 ---
 > 参考[C++中write和fwrite哪个效率更高？ - 知乎 (zhihu.com)](https://www.zhihu.com/question/546404062/answer/2605567064?utm_psn=1720524853226872832)
 >
