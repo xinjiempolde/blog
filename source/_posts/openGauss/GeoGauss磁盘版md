@@ -1,0 +1,38 @@
+---
+title: GeoGauss磁盘版
+date: 2024-07-28 20:47:24
+tags:
+categories:
+    - openGauss
+---
+
+# BackGround
+
+GeoGauss基于华为的国产开源数据库openGauss内存引擎MOT设计研发，创新地将无协调一致性技术集成到了关系型数据库系统中，提出了一种Epoch-Based Multi-Master OCC。算法借鉴 Delta State-CRDT（Conflict-Free Replicated Datatypes），重新定义数据元信息，设计具有ACI（Associative，Commutative，Idempotent）属性的多主合并函数，实现无协调冲突合并机制，避免事务冲突处理的协调开销。使用基于Epoch的合并，系统在轻量的协调开销下，实现副本的强一致性。
+
+<!--more-->
+
+然而，在GeoGauss中的Conflict-free Replicated Data Types (CRDT)算法，在处理数据冲突时，依赖于元组的主键。该算法通过主键来唯一标识是否为同一行数据。在Memory-Oriented Table (MOT)中，RowHeader已经具备了默认的主键，但在openGauss磁盘表中，则缺乏默认的主键以区分行数据的唯一性。因此，在解决数据冲突时，需要对整行数据进行字节比较，若字节完全相同，则认定为同一行数据发生了冲突。然而，这种方法对性能产生了显著影响，并增加了CPU的负担。因此，我们提出对openGauss磁盘版本引入系统列（即隐藏列），并在执行元组插入操作时，自动分配递增的主键，以此来唯一标识每一行元组数据。
+
+
+
+# openGauss磁盘表结构
+
+## 表文件
+
+PostgreSQL提供了可靠、稳定、有序的数据存储、检索管理。即使在不知道其背后运行原理的情况下，也没有多大关系，因为我们只需要按部就班地执行建库、建表然后插入数据结构这几个流程，就可以如愿以偿地实现将我们的数据持久化于PostgreSQL数据库中。于是我们不得不好奇，这些数据最终落盘于磁盘上的哪个位置？又是以什么样的形式存储？存储的格式又是什么？在这几个疑问的驱动下，本文将通过源码结合数据入库实践操作的方式，来详细地对PostgreSQL底层数据的存储方式进行详细的解读。
+
+PostgreSQL中的每个表(`TABLE`)都将由一个或多个堆文件表示。默认情况下，表的每个1GB块(`Block`)存储在一个单独的(堆)文件中。当该表文件已经达到1GB之后，用户再次插入数据时，`postgres`会重新创建一个新的堆文件，新文件名格式是：表Oid +“.” + 序号id(序号id从1开始一次递增)。示意图如下所示，其中`tudent`为`CREATE TABLE`创建的表名，该`student`表对应的堆文件名是16387。
+
+![img](https://pic4.zhimg.com/80/v2-dab28219c0b9c149c2edab1161483463_1440w.webp)
+
+
+
+# Stand-alone Implementation
+
+这里首先介绍在单机情况下的设计
+
+
+
+# Distributed Implementation
+
