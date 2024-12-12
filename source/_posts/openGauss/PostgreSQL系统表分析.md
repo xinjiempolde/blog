@@ -27,6 +27,8 @@ pg_relation_filenode
 
 这里的元数据可以理解为描述数据的数据。比如，用户创建的表有 `(c1 int, c2 text)`两种列类型，这一些类型 `int, text` 会被单独存放在 `pg_type`的系统表中，同时 `c1, c2` 列名字则会被存放在 `pg_attribute`的系统表中，并和 pg_type 形成关联。这一些 `pg_type`, `pg_attribute` 类型的表可以建立对用户表的关系描述，所以它们可以被称为元数据。
 
+<!--more-->
+
 # OID
 
 Oid 在 PostgreSQL 中被用来描述一个个数据表的逻辑对象，比如 `Relation`, `type`, `attr`, `namespace`等等，每创建一个对象都会为其分配一个属于自己的标识(Oid)。PG 也会通过 Oid 来在不同的数据表之间建立关联，也就是说有一些 对象是全局唯一的(pg_class 表的oid)。但是因为 Oid 是 `unsigned int`，所以当对象的数量超过42亿之后可能会有回卷，所以PG 对Oid的划分有一些自己的定义，比如预留16383 个Oid 作为全局唯一的对象标识，其他的都是给用户表使用，允许发生回卷。

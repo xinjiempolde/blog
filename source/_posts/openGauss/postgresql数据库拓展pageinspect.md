@@ -1,3 +1,11 @@
+---
+title: postgreSQL中使用pageinspect拓展
+date: 2024-06-27 20:47:24
+tags:
+categories:
+    - openGauss
+---
+
 > 转载自
 >
 > - [postgresql数据库扩展——pageinspect_pgpageinspect-CSDN博客](https://blog.csdn.net/asmartkiller/article/details/118686612)
@@ -5,6 +13,8 @@
 
 
 如果使用MYSQL 相对页面的层次进行一些了解，估计你就的找大佬们的工具集合，并且为此膜拜大佬们，但PG并不需要这样，PG自身自带的pageinspect 工具，就可以让你对页面级别的层次来进行一个 “透心凉” 的查看和分析，并不在为此苦恼。
+
+<!--more-->
 
 首先确认您是否拥有了 pageinspect 这个 extension ，下图通过查看pg_extension这个表您可以确认，当前您的PG上已经安装了这个extension.
 

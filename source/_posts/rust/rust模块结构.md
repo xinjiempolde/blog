@@ -21,6 +21,8 @@ categories:
 
 [github 代码地址](https://github.com/lpxxn/rust_module)
 
+<!--more-->
+
 # 模块
 
 模块以`mod`开头，下面创建了一个`say`模块

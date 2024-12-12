@@ -1,10 +1,17 @@
 ---
+title: postgreSQL中MVCC解析
+date: 2024-06-27 20:47:24
+tags:
 categories:
-  - openGauss
+    - openGauss
+
 ---
+
 > 参考：
+>
 > - [MVCC PostgreSQL 事务模型 多版本并发控制](jasongj.com)
 > - [PostgreSQL如何实现MVCC (基于xmin、xmax、cmin、cmax)_postgresql cmin xmin-CSDN博客](https://blog.csdn.net/qq_31156277/article/details/90551978)
+
 # 0x01 PostgreSQL中MVCC原理
 
 PostgreSQL中，对于每一行数据（称为一个tuple），包含有4个隐藏字段。这四个字段是隐藏的，但可直接访问。
@@ -23,7 +30,7 @@ CREATE TABLE test
 );
 ```
 
-
+<!--more-->
 
 开启一个事务，查询当前事务ID（值为3277），并插入一条数据，xmin为3277，与当前事务ID相等。符合上文所述——插入tuple时记录xmin，记录未被删除时xmax为0
 
